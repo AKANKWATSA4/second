@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FY Work Plan M&amp;E — URA TAC</title>
+
+  <!-- Add to Home Screen support -->
+  <meta name="theme-color" content="#0B4C8C">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FY Work Plan">
+  <link rel="manifest" href="https://script.google.com/macros/s/AKfycbxH1quLTn6t5Ta9MhV4102fhBi4rSCMZsZJ-4qnL-dDdR4Q8MHlsAVMByzzFB51hy8t/exec?action=manifest">
+
+  <!-- Favicon (browser tab / desktop shortcut icon) -->
+  <link rel="icon" type="image/x-icon" href="icons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+</head>
+<body style="margin:0; padding:16px; background:#ECECFE; font-family: 'IBM Plex Sans', -apple-system, sans-serif;">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Limelight&display=swap');
+
+  #fy-ledger-root {
+    --bg: #0B4C8C;
+    --panel: #0F5390;
+    --panel-alt: #123F72;
+    --border: rgba(255,255,255,0.30);
+    --text: #FFFFFF;
+    --text-muted: #C7DCF5;
+    --teal: #4FD1FF;
+    --amber: #FFD700;
+    --red: #FF6B6B;
+    --green: #3DDC84;
+    --indigo: #2E86D8;
+    --ura-yellow: #FFD700;
+    --ura-blue: #2E86D8;
+ 
+    background: linear-gradient(135deg, #2E86D8 0%, #0B4C8C 45%, #003D7A 100%);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+    border-radius: 14px;
+    padding: 0;
+    min-height: 560px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  #fy-ledger-root * { box-sizing: border-box; }
+  #fy-ledger-root .brand-stripe {
+    height: 6px; width: 100%;
+    background: linear-gradient(90deg, var(--ura-blue) 0%, #1B5FA0 45%, var(--ura-yellow) 100%);
+  }
+  #fy-ledger-root .mono { font-family: 'IBM Plex Mono', monospace; }
+  #fy-ledger-root .display { font-family: 'Space Grotesk', sans-serif; }
+  #fy-ledger-root .person-name { font-weight: 800; color: var(--indigo); letter-spacing: 0.01em; }
+
+  #fy-ledger-root .refresh-btn {
+    background: var(--panel-alt); border: 1px solid var(--indigo); color: #FFFFFF; border-radius: 7px;
+    padding: 6px 12px; font-size: 12px; cursor: pointer; font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700; transition: background 0.12s ease, transform 0.06s ease;
+  }
+  #fy-ledger-root .refresh-btn:hover { background: rgba(46,134,216,0.35); }
+  #fy-ledger-root .refresh-btn:active { transform: scale(0.96); background: var(--indigo); color: #FFFFFF; }
+  #fy-ledger-root .refresh-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
+
+  #fy-ledger-root .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 24px; border-bottom: 1px solid var(--border);
+    background: linear-gradient(120deg, #2E86D8 0%, #0B4C8C 55%, #003D7A 100%);
+    flex-wrap: wrap; gap: 12px;
+  }
+  #fy-ledger-root .brand { display: flex; flex-direction: column; gap: 2px; padding-left: 58px; position: relative; }
+  #fy-ledger-root .brand::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #fff;
+    border: 2px solid var(--ura-yellow);
+    box-shadow: 0 2px 10px rgba(255,215,0,.35);
+  }
+  #fy-ledger-root .brand .eyebrow {
+    font-size: 12px; letter-spacing: 0.1em; color: #123F72;
+    text-transform: uppercase; font-family: 'IBM Plex Mono', monospace;
+    font-weight: 800;
+    background: linear-gradient(90deg, rgba(255,215,0,0.85) 0%, rgba(255,215,0,0) 90%);
+    padding: 2px 4px 2px 0; border-radius: 3px; display: inline-block;
+  }
+  #fy-ledger-root .brand h1 { margin: 0; font-size: 21px; font-weight: 700; color: #FFFFFF; }
+  #fy-ledger-root .brand h1 .me-broadway {
+    font-family: 'Broadway', 'Limelight', fantasy;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    color: var(--ura-yellow);
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.35);
+  }
+
+  #fy-ledger-root .who {
+    display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted);
+  }
+  #fy-ledger-root select {
+    background: var(--panel-alt); color: var(--text); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 10px; font-family: inherit; font-size: 13px;
+  }
+
+  #fy-ledger-root .tabs {
+    display: flex; gap: 4px; padding: 12px 24px 0 24px; border-bottom: 1px solid var(--border);
+    background: #123F72;
+  }
+  #fy-ledger-root .tab {
+    padding: 9px 16px; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 13px;
+    color: var(--text-muted); border: 1px solid transparent; border-bottom: none;
+  }
+  #fy-ledger-root .tab.active {
+    background: var(--panel); color: #FFFFFF; border-color: var(--border);
+    font-weight: 600;
+  }
+
+  #fy-ledger-root .body { padding: 22px 24px 26px 24px; background: linear-gradient(180deg, #0B4C8C, #003D7A); }
+
+  #fy-ledger-root .stat-row { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  #fy-ledger-root .stat {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 16px; min-width: 120px; flex: 1;
+  }
+  #fy-ledger-root .stat .num { font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; color: #FFFFFF; }
+  #fy-ledger-root .stat .lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+  #fy-ledger-root .stat.teal .num { color: var(--teal); }
+  #fy-ledger-root .stat.amber .num { color: var(--amber); }
+  #fy-ledger-root .stat.red .num { color: var(--red); }
+
+  #fy-ledger-root .deliverables-wrap { margin-bottom: 20px; }
+  #fy-ledger-root .deliverable-cell {
+    width: 108px; min-height: 34px; height: 74px; margin: 5px auto;
+    border-radius: 6px; padding: 4px; display: flex; flex-direction: column; gap: 3px;
+    border: 1px solid var(--border); background: var(--panel);
+  }
+  #fy-ledger-root .deliverable-cell.empty-cell {
+    align-items: center; justify-content: center; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  }
+  #fy-ledger-root .deliverable-cell.neutral { border-color: var(--border); background: var(--panel); }
+  #fy-ledger-root .deliverable-cell.complete { border-color: var(--green); background: rgba(61,220,132,0.14); }
+  #fy-ledger-root .deliverable-cell.pending { border-color: var(--amber); background: rgba(255,215,0,0.12); }
+  #fy-ledger-root .deliverable-chip {
+    background: rgba(255,255,255,0.06); color: var(--text-muted); border-color: var(--border);
+  }
+  #fy-ledger-root .deliverable-cell.complete .deliverable-chip {
+    border-color: var(--green); color: var(--green); background: rgba(61,220,132,0.20);
+  }
+  #fy-ledger-root .deliverable-cell.pending .deliverable-chip {
+    border-color: var(--amber); color: #FFE873; background: rgba(255,215,0,0.20);
+  }
+
+  #fy-ledger-root .grid-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; background: var(--panel); }
+  #fy-ledger-root table { border-collapse: collapse; width: 100%; min-width: 1500px; }
+  #fy-ledger-root th, #fy-ledger-root td { padding: 0; text-align: center; }
+  #fy-ledger-root thead th {
+    font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 10px 6px; border-bottom: 1px solid var(--border); background: #123F72;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  #fy-ledger-root thead th.name-col, #fy-ledger-root td.name-col { text-align: left; padding-left: 14px; }
+  #fy-ledger-root tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
+  #fy-ledger-root td.name-col { font-weight: 600; font-size: 13px; padding: 10px 12px; white-space: nowrap; color: #FFFFFF; }
+  #fy-ledger-root td.name-col .pct { display:block; font-size:10px; color: var(--text-muted); font-weight: 400; margin-top:2px; }
+
+  #fy-ledger-root .cell {
+    width: 108px; min-height: 34px; height: 118px; margin: 5px auto;
+    border-radius: 6px; padding: 4px; display: flex; flex-direction: column; gap: 3px;
+    cursor: pointer; border: 1px solid var(--border); background: var(--panel);
+  }
+  #fy-ledger-root .cell.empty-cell {
+    align-items: center; justify-content: center; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  }
+  #fy-ledger-root .cell-page { display: flex; flex-direction: column; gap: 3px; flex: 1; min-height: 0; }
+  #fy-ledger-root .cell-task {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px; padding: 3px 6px; border-radius: 4px;
+    border: 1px solid var(--border); text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    color: var(--text-muted);
+  }
+  #fy-ledger-root .cell-task.done { background: rgba(79,209,255,0.18); border-color: var(--teal); color: var(--teal); }
+  #fy-ledger-root .cell-task.due { background: rgba(255,215,0,0.20); border-color: var(--amber); color: #FFE873; }
+  #fy-ledger-root .cell-task.overdue { background: rgba(255,107,107,0.20); border-color: var(--red); color: var(--red); font-weight: 700; }
+  #fy-ledger-root .cell-task.upcoming { background: transparent; }
+  #fy-ledger-root .cell-pager {
+    display: flex; align-items: center; justify-content: space-between; flex: none;
+    margin-top: 1px; padding-top: 2px; border-top: 1px dashed var(--border);
+  }
+  #fy-ledger-root .pager-btn {
+    background: none; border: none; color: var(--ura-yellow); font-size: 12px; font-weight: 700;
+    cursor: pointer; padding: 0 4px; line-height: 1; font-family: 'IBM Plex Mono', monospace;
+  }
+  #fy-ledger-root .pager-btn:disabled { color: var(--border); cursor: default; }
+  #fy-ledger-root .pager-dots {
+    font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--text-muted); letter-spacing: 0.02em;
+  }
+
+  #fy-ledger-root .attention {
+    margin-top: 22px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 4px 0;
+  }
+  #fy-ledger-root .attention h3 {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ura-yellow);
+    padding: 12px 16px 4px 16px; margin: 0; font-family: 'IBM Plex Mono', monospace;
+  }
+  #fy-ledger-root .attention-row {
+    display: flex; justify-content: space-between; align-items: center; padding: 8px 16px;
+    font-size: 13px; border-top: 1px solid var(--border);
+  }
+  #fy-ledger-root .attention-row .who-task { display: flex; gap: 8px; align-items: baseline; }
+  #fy-ledger-root .attention-row .p-name { color: #FFFFFF; font-weight: 700; }
+  #fy-ledger-root .attention-empty { padding: 14px 16px; color: var(--text-muted); font-size: 13px; }
+
+  #fy-ledger-root .month-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 16px; }
+  #fy-ledger-root .month-tab {
+    flex: none; padding: 8px 14px; border-radius: 8px; font-size: 12.5px; cursor: pointer;
+    border: 1px solid var(--border); color: var(--text-muted); font-family: 'IBM Plex Mono', monospace;
+    position: relative; background: var(--panel);
+  }
+  #fy-ledger-root .month-tab.active { background: var(--indigo); color: #FFFFFF; border-color: var(--indigo); font-weight: 700; }
+  #fy-ledger-root .month-tab.now::after {
+    content: '•'; position: absolute; top: -2px; right: 3px; color: var(--amber); font-size: 16px;
+  }
+
+  #fy-ledger-root .readonly-banner {
+    background: rgba(46,134,216,0.20); border: 1px solid var(--indigo); color: #FFFFFF;
+    font-size: 12.5px; padding: 8px 12px; border-radius: 8px; margin-bottom: 14px; display:flex; justify-content:space-between; align-items:center;
+  }
+  #fy-ledger-root .readonly-banner button {
+    background: var(--indigo); color: #FFFFFF; border: none; border-radius: 6px; padding: 5px 10px; font-size: 12px; cursor: pointer; font-weight: 600;
+  }
+
+  #fy-ledger-root .task-list { display: flex; flex-direction: column; gap: 8px; }
+  #fy-ledger-root .task {
+    display: flex; align-items: center; gap: 10px; background: var(--panel);
+    border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px;
+  }
+  #fy-ledger-root .task.done { opacity: 0.65; }
+  #fy-ledger-root .check {
+    width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid var(--text-muted);
+    display: flex; align-items: center; justify-content: center; cursor: pointer; flex: none;
+    font-size: 13px; color: transparent;
+  }
+  #fy-ledger-root .task.done .check { background: var(--teal); border-color: var(--teal); color: #003D7A; }
+  #fy-ledger-root .task-title { flex: 1; font-size: 14px; color: #FFFFFF; }
+  #fy-ledger-root .task.done .task-title { text-decoration: line-through; color: var(--text-muted); }
+  #fy-ledger-root .stamp {
+    font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.08em; padding: 3px 7px;
+    border-radius: 4px; border: 1px dashed; transform: rotate(-3deg); font-weight: 700;
+  }
+  #fy-ledger-root .stamp.done { color: var(--teal); border-color: var(--teal); }
+  #fy-ledger-root .stamp.overdue { color: var(--red); border-color: var(--red); }
+  #fy-ledger-root .stamp.due { color: #FFE873; border-color: var(--amber); }
+  #fy-ledger-root .del { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 15px; padding: 4px; flex: none; }
+  #fy-ledger-root .del:hover { color: var(--red); }
+
+  #fy-ledger-root .add-row { display: flex; gap: 8px; margin-top: 12px; }
+  #fy-ledger-root .add-row input {
+    flex: 1; background: var(--panel-alt); border: 1px solid var(--border); color: var(--text);
+    border-radius: 8px; padding: 9px 12px; font-size: 13.5px; font-family: inherit;
+  }
+  #fy-ledger-root .add-row select {
+    background: var(--panel-alt); border: 1px solid var(--border); color: var(--text);
+    border-radius: 8px; padding: 9px 10px; font-size: 12.5px; font-family: inherit; max-width: 200px;
+  }
+  #fy-ledger-root .add-row button {
+    background: var(--teal); color: #003D7A; border: none; border-radius: 8px; padding: 0 16px;
+    font-weight: 700; font-size: 13px; cursor: pointer;
+  }
+  #fy-ledger-root .add-row button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  #fy-ledger-root .obj-add-form { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  #fy-ledger-root .obj-add-form input {
+    flex: 1; min-width: 180px; background: var(--panel-alt); border: 1px solid var(--border); color: var(--text);
+    border-radius: 8px; padding: 9px 12px; font-size: 13.5px; font-family: inherit;
+  }
+  #fy-ledger-root .obj-add-form select {
+    background: var(--panel-alt); border: 1px solid var(--border); color: var(--text);
+    border-radius: 8px; padding: 9px 10px; font-size: 12.5px; font-family: inherit;
+  }
+  #fy-ledger-root .obj-add-form button {
+    background: var(--indigo); color: #FFFFFF; border: none; border-radius: 8px; padding: 0 16px;
+    font-weight: 700; font-size: 13px; cursor: pointer;
+  }
+  #fy-ledger-root .obj-card {
+    border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; background: var(--panel);
+  }
+  #fy-ledger-root .obj-card-header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  #fy-ledger-root .obj-title { font-weight: 700; font-size: 14.5px; color: #FFFFFF; }
+  #fy-ledger-root .obj-stats {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-muted); white-space: nowrap;
+  }
+  #fy-ledger-root .obj-progress { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 8px 0 12px; }
+  #fy-ledger-root .obj-progress-fill { height: 100%; background: var(--ura-yellow); }
+  #fy-ledger-root .obj-sub {
+    margin-left: 6px; padding: 8px 0 8px 14px; border-left: 2px solid var(--border); margin-bottom: 8px;
+  }
+  #fy-ledger-root .obj-sub-header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  #fy-ledger-root .obj-sub-title { font-size: 13px; font-weight: 600; color: #FFFFFF; }
+  #fy-ledger-root .obj-int {
+    margin-left: 10px; padding: 6px 0 6px 12px; border-left: 2px dashed var(--border); margin-bottom: 6px;
+  }
+  #fy-ledger-root .obj-int-header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  #fy-ledger-root .obj-int-title { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+  #fy-ledger-root .obj-progress.small { height: 4px; margin: 4px 0 6px; }
+  #fy-ledger-root .obj-people { font-size: 10.5px; color: var(--text-muted); margin-top: 4px; }
+  #fy-ledger-root .obj-empty { color: var(--text-muted); font-size: 13px; padding: 20px 4px; text-align: center; }
+
+  #fy-ledger-root .obj-subnav { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  #fy-ledger-root .obj-panel-btn {
+    padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--panel);
+    font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text);
+  }
+  #fy-ledger-root .obj-panel-btn.active { background: var(--indigo); color: #FFFFFF; border-color: var(--indigo); }
+  #fy-ledger-root .obj-panel {
+    border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin-bottom: 18px; background: var(--panel-alt);
+  }
+  #fy-ledger-root .obj-list-item {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+    padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;
+  }
+  #fy-ledger-root .obj-list-item:last-child { border-bottom: none; }
+  #fy-ledger-root .obj-list-parent { font-size: 10.5px; color: var(--text-muted); white-space: nowrap; }
+
+  #fy-ledger-root .obj-analysis { margin-top: 24px; padding-top: 18px; border-top: 2px solid var(--border); }
+  #fy-ledger-root .obj-analysis h4 {
+    font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted);
+    margin: 18px 0 8px; font-weight: 700;
+  }
+  #fy-ledger-root .obj-analysis h4:first-child { margin-top: 0; }
+  #fy-ledger-root .analysis-row {
+    display: flex; align-items: center; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 12.5px;
+  }
+  #fy-ledger-root .analysis-row .name { flex: 1; }
+  #fy-ledger-root .analysis-row .bar { width: 90px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; flex: none; }
+  #fy-ledger-root .analysis-row .bar-fill { height: 100%; background: var(--ura-yellow); }
+  #fy-ledger-root .analysis-row .stat {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-muted); white-space: nowrap;
+  }
+
+  #fy-ledger-root .empty-month { color: var(--text-muted); font-size: 13px; padding: 18px 4px; }
+
+  #fy-ledger-root .download-btn {
+    background: var(--indigo); color: #FFFFFF; border: 1px solid var(--indigo); border-radius: 7px;
+    padding: 8px 14px; font-size: 12.5px; cursor: pointer; font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700; transition: background 0.12s ease;
+  }
+  #fy-ledger-root .download-btn:hover { background: #1B5FA0; }
+  #fy-ledger-root .reports-table-wrap { overflow-x: auto; }
+  #fy-ledger-root .reports-table-wrap table { width: 100%; border-collapse: collapse; min-width: 0; }
+  #fy-ledger-root .reports-table-wrap th {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);
+    background: #123F72; padding: 10px 14px; text-align: left; font-family: 'IBM Plex Mono', monospace;
+    border-bottom: 1px solid var(--border); border-top: 1px solid var(--border);
+  }
+  #fy-ledger-root .reports-table-wrap td {
+    padding: 9px 14px; font-size: 13px; border-top: 1px solid var(--border); text-align: left; color: #FFFFFF;
+  }
+  #fy-ledger-root .reports-table-wrap th.num, #fy-ledger-root .reports-table-wrap td.num { text-align: right; }
+  #fy-ledger-root .reports-table-wrap tbody tr:first-child td { border-top: none; }
+
+  #fy-ledger-root .name-edit {
+    background: transparent; border: none; border-bottom: 1px dashed var(--border); color: var(--text);
+    font: inherit; font-weight: 600; font-size: 13px; width: 110px;
+  }
+
+  #editNamesModal {
+    position: fixed; inset: 0; background: rgba(6,8,12,0.6);
+    display: flex; align-items: center; justify-content: center; z-index: 999;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+  #editNamesModal .modal-card {
+    background: #FFFFFF; border: 1px solid #C6C6FB; border-radius: 12px; padding: 20px;
+    width: 320px; max-width: 90vw; color: #14146B;
+  }
+  #editNamesModal h3 { margin: 0 0 14px 0; font-size: 15px; font-family: 'Space Grotesk', sans-serif; }
+  #editNamesModal .modal-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+  #editNamesModal .modal-row span { font-size: 11px; color: #5F5FA0; width: 20px; font-family: 'IBM Plex Mono', monospace; }
+  #editNamesModal .modal-row input {
+    flex: 1; background: #EDEDFE; border: 1px solid #C6C6FB; color: #14146B;
+    border-radius: 6px; padding: 7px 9px; font-size: 13px; font-family: inherit;
+  }
+  #editNamesModal .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+  #editNamesModal .modal-actions button {
+    padding: 9px 18px; border-radius: 7px; border: none; font-size: 13.5px; cursor: pointer; font-weight: 700;
+  }
+  #editNamesModal .modal-actions .save {
+    background: #0303F2; color: #FFFFFF; box-shadow: 0 2px 6px rgba(3,3,242,0.30);
+  }
+  #editNamesModal .modal-actions .save:hover { background: #164A8C; }
+  #editNamesModal .modal-actions .cancel { background: #EDEDFE; color: #5F5FA0; border: 1px solid #C6C6FB; }
+</style>
+ 
+<div id="fy-ledger-root">
+  <div class="brand-stripe"></div>
+  <div class="topbar">
+    <div class="brand">
+      <span class="eyebrow mono" id="fy-tag">FY LEDGER</span>
+      <h1 id="fy-title" class="display">Work Plan</h1>
+      <span class="mono" id="todayDate" style="font-size:11px;color:var(--text-muted);margin-top:2px;"></span>
+    </div>
+    <div class="who">
+      <button id="editNamesBtn" style="display:none; background:var(--indigo); color:#FFFFFF; border:1px solid var(--indigo); border-radius:7px; padding:6px 12px; font-size:12px; cursor:pointer; font-family:'IBM Plex Mono', monospace; font-weight:700;">✎ edit names</button>
+      <button class="refresh-btn" id="refreshBtn">↻ refresh</button>
+      <span>Logged in as</span>
+      <select id="whoSelect"></select>
+    </div>
+  </div>
+  <div id="storageWarning" style="display:none; background: rgba(255,215,0,0.20); border-bottom: 1px solid var(--amber); color: #FFE873; font-size: 12.5px; padding: 8px 24px; font-family: 'IBM Plex Mono', monospace;">
+    ⚠ <span id="storageWarningText">Not connected to the shared backend.</span>
+  </div>
+  <div class="tabs">
+    <div class="tab active" data-tab="dashboard">Dashboard</div>
+    <div class="tab" data-tab="mytasks">My Tasks</div>
+    <div class="tab" data-tab="objectives">Objectives</div>
+    <div class="tab" data-tab="reports">Reports</div>
+  </div>
+  <div class="body" id="bodyArea"></div>
+  <div style="padding:12px 24px; border-top:1px solid var(--border); text-align:center; font-size:11.5px; color:var(--text-muted); font-family:'IBM Plex Mono', monospace; letter-spacing:0.04em;">
+    URA Tax Academy — Shaping Tax Professionals
+  </div>
+</div>
+<div id="editNamesModal" style="display:none;"></div>
+ 
+<script>
+(function(){
+  const root = document.getElementById('fy-ledger-root');
+  const MONTH_NAMES = ['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun'];
+  const CAL_MONTH = [7,8,9,10,11,12,1,2,3,4,5,6];
+ 
+  function fyStartYear(d){ return d.getMonth()+1 >= 7 ? d.getFullYear() : d.getFullYear()-1; }
+  function currentFyMonthIndex(d, sYear){
+    const y = d.getFullYear(), m = d.getMonth()+1;
+    for (let i=0;i<12;i++){
+      const cm = CAL_MONTH[i];
+      const cy = i<6 ? sYear : sYear+1;
+      if (cy===y && cm===m) return i+1;
+    }
+    if (y < sYear || (y===sYear && m<7)) return 0;
+    return 13;
+  }
+ 
+  let startYear = fyStartYear(new Date());
+  let fyLabel = `FY ${String(startYear).slice(-2)}/${String(startYear+1).slice(-2)}`;
+  let CUR_MONTH = currentFyMonthIndex(new Date(), startYear);
+ 
+  function refreshClock(){
+    const now = new Date();
+    const newStartYear = fyStartYear(now);
+    const monthChanged = newStartYear !== startYear;
+    startYear = newStartYear;
+    fyLabel = `FY ${String(startYear).slice(-2)}/${String(startYear+1).slice(-2)}`;
+    const newCurMonth = currentFyMonthIndex(now, startYear);
+    const curMonthChanged = newCurMonth !== CUR_MONTH;
+    CUR_MONTH = newCurMonth;
+    const dateEl = document.getElementById('todayDate');
+    if (dateEl){
+      dateEl.textContent = 'Today: ' + now.toLocaleDateString(undefined, { weekday:'short', day:'2-digit', month:'short', year:'numeric' });
+    }
+    return monthChanged || curMonthChanged;
+  }
+ 
+  let state = null;
+  let me = null;
+  let activeTab = 'dashboard';
+  let activeMonth = Math.min(Math.max(CUR_MONTH,1),12);
+  let viewingPersonId = null;
+  let editNamesOpen = false;
+  let cellPage = {};
+  const CELL_PAGE_SIZE = 4;
+  let deliverablePage = {};
+  let deliverablesFormOpen = false;
+  let objectivesManagePanel = null;
+ 
+  function defaultState(){
+    const people = [1,2,3,4,5,6].map(n => ({id:'p'+n, name:'Person '+n}));
+    const sample = [
+      {p:0, m:1, t:'Set FY objectives with manager'},
+      {p:0, m:4, t:'Mid-year self review'},
+      {p:1, m:2, t:'Complete compliance training'},
+      {p:2, m:1, t:'Submit Q1 department plan'},
+      {p:3, m:5, t:'Budget variance report'},
+      {p:4, m:3, t:'Client renewal check-ins'},
+      {p:5, m:6, t:'Half-year KPI summary'},
+    ];
+    const tasks = sample.map((s,i) => ({
+      id:'t0'+i, personId: people[s.p].id, month: s.m, title: s.t, done:false, doneAt:null
+    }));
+    return { people, tasks, deliverables: [] };
+  }
+ 
+  const API_URL = 'https://script.google.com/macros/s/AKfycbxH1quLTn6t5Ta9MhV4102fhBi4rSCMZsZJ-4qnL-dDdR4Q8MHlsAVMByzzFB51hy8t/exec';
+  const POLL_MS = 120000;
+  const LS_ME_KEY = 'fy-workplan-me-v1';
+ 
+  let storageOk = true;
+  let lastGoodState = null;
+  let lastErrorMessage = null;
+  let snapshots = [];
+
+  async function loadSnapshots(){
+    if (!apiConfigured()){ snapshots = []; return; }
+    try {
+      const res = await fetch(API_URL + '?action=snapshots', { method: 'GET' });
+      if (!res.ok) throw new Error('bad response');
+      const data = await res.json();
+      if (data && data.error) throw new Error(data.error);
+      snapshots = Array.isArray(data) ? data : (data.snapshots || []);
+    } catch(e){
+      // Keep whatever we last had on a transient failure rather than blanking the history.
+    }
+  }
+ 
+  function apiConfigured(){
+    return API_URL && API_URL.indexOf('PASTE_YOUR_APPS_SCRIPT') === -1;
+  }
+  function snapshotGood(){
+    lastGoodState = JSON.parse(JSON.stringify(state));
+  }
+  async function apiGetState(){
+    const res = await fetch(API_URL + '?action=state', { method: 'GET' });
+    if (!res.ok) throw new Error('bad response');
+    return await res.json();
+  }
+  // Uses GET (not POST) for writes on purpose: Google Apps Script web apps
+  // internally redirect to serve their response, and that redirect can drop
+  // the permissions a POST request needs — GET doesn't have this problem.
+  // Every value is still validated and permission-checked server-side.
+  async function apiPost(action, payload){
+    const params = new URLSearchParams(Object.assign({ action }, payload));
+    const res = await fetch(API_URL + '?' + params.toString(), { method: 'GET' });
+    if (!res.ok) throw new Error('bad response');
+    const data = await res.json();
+    if (data && data.error) throw new Error(data.error);
+    return data;
+  }
+ 
+  async function loadState(isInitial){
+    if (!apiConfigured()){
+      storageOk = false;
+      if (isInitial && !state) state = defaultState();
+      return;
+    }
+    try {
+      const loaded = await apiGetState();
+      // Guard against an older/mismatched backend deployment that
+      // doesn't return an objectives/deliverables array yet -- fail
+      // safe to an empty list instead of silently breaking every
+      // helper that reads state.objectives / state.deliverables.
+      state = Object.assign({ objectives: [], deliverables: [] }, loaded);
+      snapshotGood();
+      storageOk = true;
+      lastErrorMessage = null;
+    } catch(e){
+      storageOk = false;
+      lastErrorMessage = e.message || String(e);
+      if (isInitial && !state) state = defaultState();
+    }
+  }
+ 
+  async function loadMe(){
+    try { me = localStorage.getItem(LS_ME_KEY) || null; } catch(e){ me = null; }
+  }
+  async function setMe(id){
+    me = id;
+    try { localStorage.setItem(LS_ME_KEY, id); } catch(e){}
+  }
+ 
+  function tasksFor(personId, month){
+    return state.tasks.filter(t => t.personId===personId && t.month===month);
+  }
+  function objectiveById(id){
+    return (state.objectives||[]).find(o=>o.id===id);
+  }
+  // Depth in the chain: 0 = Strategic Objective (no parent),
+  // 1 = Planned Goal (parent is a Strategic Objective),
+  // 2 = Intervention (parent is a Planned Goal). Tasks always tag to
+  // a depth-2 Intervention.
+  function depthOf(o){
+    let d = 0, cur = o, guard = 0;
+    while (cur && cur.parentId && guard < 10){ cur = objectiveById(cur.parentId); d++; guard++; }
+    return d;
+  }
+  function objectivesAtDepth(depth){
+    return (state.objectives||[]).filter(o => depthOf(o) === depth);
+  }
+  function strategicObjectives(){ return objectivesAtDepth(0); }
+  function plannedGoalsOf(strategicId){
+    return (state.objectives||[]).filter(o => o.parentId === strategicId);
+  }
+  function interventionsOf(goalId){
+    return (state.objectives||[]).filter(o => o.parentId === goalId);
+  }
+  function tasksForObjective(objId){
+    return state.tasks.filter(t=>t.objectiveId===objId);
+  }
+  // All tasks tagged anywhere under this objective node, walking down
+  // the whole chain (used for roll-up stats at any level).
+  function allTasksUnder(objId){
+    let result = tasksForObjective(objId);
+    const children = (state.objectives||[]).filter(o=>o.parentId===objId);
+    children.forEach(c => { result = result.concat(allTasksUnder(c.id)); });
+    return result;
+  }
+  function objectiveStats(taskList){
+    const total = taskList.length;
+    const done = taskList.filter(t=>t.done).length;
+    const overdue = taskList.filter(t=>!t.done && t.month < CUR_MONTH).length;
+    const peopleIds = [...new Set(taskList.map(t=>t.personId))];
+    const people = peopleIds
+      .map(pid => (state.people.find(p=>p.id===pid)||{}).name)
+      .filter(Boolean);
+    return { total, done, overdue, people };
+  }
+  const OBJ_LEVEL_LABELS = { strategic: 'Strategic Objective', goal: 'Planned Goal', intervention: 'Intervention' };
+  function renderObjectiveLevelManager(level){
+    let items, parentSelectHtml;
+    if (level === 'strategic'){
+      items = objectivesAtDepth(0);
+      parentSelectHtml = '';
+    } else if (level === 'goal'){
+      items = objectivesAtDepth(1);
+      const strategics = strategicObjectives();
+      parentSelectHtml = `<select id="newLevelParent">
+        <option value="">— choose strategic objective —</option>
+        ${strategics.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('')}
+      </select>`;
+    } else {
+      items = objectivesAtDepth(2);
+      const goals = objectivesAtDepth(1);
+      parentSelectHtml = `<select id="newLevelParent">
+        <option value="">— choose planned goal —</option>
+        ${goals.map(g=>{
+          const strat = objectiveById(g.parentId);
+          const label = strat ? (strat.name + ' → ' + g.name) : g.name;
+          return `<option value="${g.id}">${escapeHtml(label)}</option>`;
+        }).join('')}
+      </select>`;
+    }
+
+    const listHtml = items.length ? items.map(it=>{
+      let parentTag = '';
+      if (level !== 'strategic'){
+        const parent = objectiveById(it.parentId);
+        parentTag = parent ? `<span class="obj-list-parent">under ${escapeHtml(parent.name)}</span>` : '';
+      }
+      return `<div class="obj-list-item"><span>${escapeHtml(it.name)}</span>${parentTag}</div>`;
+    }).join('') : `<div class="obj-empty">None yet.</div>`;
+
+    const blockedReason = level === 'goal' && !strategicObjectives().length
+      ? 'Add a strategic objective first.'
+      : level === 'intervention' && !objectivesAtDepth(1).length
+        ? 'Add a planned goal first.'
+        : '';
+
+    return `<div class="obj-panel">
+      ${blockedReason ? `<div class="obj-empty">${blockedReason}</div>` : `
+      <div class="obj-add-form">
+        <input type="text" id="newLevelName" placeholder="New ${OBJ_LEVEL_LABELS[level]}…" />
+        ${parentSelectHtml}
+        <button id="addLevelBtn" data-level="${level}">Add</button>
+      </div>`}
+      <div class="obj-list">${listHtml}</div>
+    </div>`;
+  }
+  function renderObjectivesOverview(){
+    const strategics = strategicObjectives();
+    if (!strategics.length){
+      return `<div class="obj-empty">No strategic objectives yet — use the buttons above to add one.</div>`;
+    }
+    return strategics.map(strat=>{
+      const goals = plannedGoalsOf(strat.id);
+      const stats = objectiveStats(allTasksUnder(strat.id));
+      const pct = stats.total ? Math.round(stats.done / stats.total * 100) : 0;
+
+      const goalsHtml = goals.map(g=>{
+        const interventions = interventionsOf(g.id);
+        const gStats = objectiveStats(allTasksUnder(g.id));
+        const gPct = gStats.total ? Math.round(gStats.done / gStats.total * 100) : 0;
+
+        const intsHtml = interventions.map(iv=>{
+          const ivStats = objectiveStats(tasksForObjective(iv.id));
+          const ivPct = ivStats.total ? Math.round(ivStats.done / ivStats.total * 100) : 0;
+          return `<div class="obj-int">
+            <div class="obj-int-header">
+              <span class="obj-int-title">${escapeHtml(iv.name)}</span>
+              <span class="obj-stats">${ivStats.done}/${ivStats.total}${ivStats.overdue ? ' · ' + ivStats.overdue + ' overdue' : ''}</span>
+            </div>
+            <div class="obj-progress small"><div class="obj-progress-fill" style="width:${ivPct}%"></div></div>
+            ${ivStats.people.length ? `<div class="obj-people">${ivStats.people.map(escapeHtml).join(', ')}</div>` : ''}
+          </div>`;
+        }).join('');
+
+        return `<div class="obj-sub">
+          <div class="obj-sub-header">
+            <span class="obj-sub-title">${escapeHtml(g.name)}</span>
+            <span class="obj-stats">${gStats.done}/${gStats.total}${gStats.overdue ? ' · ' + gStats.overdue + ' overdue' : ''}</span>
+          </div>
+          <div class="obj-progress"><div class="obj-progress-fill" style="width:${gPct}%"></div></div>
+          ${intsHtml}
+        </div>`;
+      }).join('');
+
+      return `<div class="obj-card">
+        <div class="obj-card-header">
+          <span class="obj-title">${escapeHtml(strat.name)}</span>
+          <span class="obj-stats">${stats.done}/${stats.total}${stats.overdue ? ' · ' + stats.overdue + ' overdue' : ''}</span>
+        </div>
+        <div class="obj-progress"><div class="obj-progress-fill" style="width:${pct}%"></div></div>
+        ${goalsHtml}
+      </div>`;
+    }).join('');
+  }
+  function renderObjectivesAnalysis(){
+    function rowsFor(depth, emptyLabel){
+      const items = objectivesAtDepth(depth);
+      if (!items.length) return `<div class="obj-empty">No ${emptyLabel} yet.</div>`;
+      return items.map(o=>{
+        const stats = objectiveStats(allTasksUnder(o.id));
+        const pct = stats.total ? Math.round(stats.done / stats.total * 100) : 0;
+        return `<div class="analysis-row">
+          <span class="name">${escapeHtml(o.name)}</span>
+          <div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div>
+          <span class="stat">${stats.done}/${stats.total}${stats.overdue ? ' · ' + stats.overdue + ' late' : ''}</span>
+        </div>`;
+      }).join('');
+    }
+    return `<div class="obj-analysis">
+      <h4>By Strategic Objective</h4>
+      ${rowsFor(0, 'strategic objectives')}
+      <h4>By Planned Goal</h4>
+      ${rowsFor(1, 'planned goals')}
+      <h4>By Intervention</h4>
+      ${rowsFor(2, 'interventions')}
+    </div>`;
+  }
+  function renderObjectives(){
+    const isManager = me === 'manager';
+    const panelBtns = ['strategic','goal','intervention'].map(level=>
+      `<button class="obj-panel-btn ${objectivesManagePanel===level?'active':''}" data-panel="${level}">${OBJ_LEVEL_LABELS[level]}</button>`
+    ).join('');
+    const panelHtml = (isManager && objectivesManagePanel) ? renderObjectiveLevelManager(objectivesManagePanel) : '';
+
+    return `
+      ${isManager ? `<div class="obj-subnav">${panelBtns}</div>` : ''}
+      ${panelHtml}
+      ${renderObjectivesOverview()}
+      ${renderObjectivesAnalysis()}
+    `;
+  }
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function personStats(personId){
+    const list = state.tasks.filter(t=>t.personId===personId);
+    const done = list.filter(t=>t.done).length;
+    const overdue = list.filter(t=>!t.done && t.month < CUR_MONTH).length;
+    return { total:list.length, done, overdue, pct: list.length? Math.round(done/list.length*100):0 };
+  }
+
+  function monthCompletionStatus(m){
+    const list = state.tasks.filter(t=>t.month===m);
+    if (!list.length) return 'neutral';
+    return list.every(t=>t.done) ? 'complete' : 'pending';
+  }
+  function deliverablesFor(month){
+    return (state.deliverables||[]).filter(d=>d.month===month);
+  }
+  function renderDeliverablesRow(){
+    const DELIV_PAGE_SIZE = 2;
+    const cells = MONTH_NAMES.map((mn, idx) => {
+      const m = idx + 1;
+      const list = deliverablesFor(m);
+      const status = monthCompletionStatus(m);
+      if (!list.length){
+        return `<td><div class="deliverable-cell ${status} empty-cell" title="${mn}: no deliverables set">–</div></td>`;
+      }
+      const key = 'dv|' + m;
+      const totalPages = Math.ceil(list.length / DELIV_PAGE_SIZE);
+      let pg = deliverablePage[key] || 0;
+      if (pg >= totalPages) pg = totalPages - 1;
+      if (pg < 0) pg = 0;
+      deliverablePage[key] = pg;
+      const pageItems = list.slice(pg*DELIV_PAGE_SIZE, pg*DELIV_PAGE_SIZE + DELIV_PAGE_SIZE);
+      const chips = pageItems.map(d => `<div class="cell-task deliverable-chip" title="${escapeHtml(d.title)}">${escapeHtml(d.title)}</div>`).join('');
+      const pager = totalPages > 1
+        ? `<div class="cell-pager">
+             <button class="pager-btn" data-deliv-pager-prev="${key}" ${pg===0?'disabled':''}>‹</button>
+             <span class="pager-dots">${pg+1}/${totalPages}</span>
+             <button class="pager-btn" data-deliv-pager-next="${key}" ${pg===totalPages-1?'disabled':''}>›</button>
+           </div>`
+        : '';
+      return `<td><div class="deliverable-cell ${status}"><div class="cell-page">${chips}</div>${pager}</div></td>`;
+    }).join('');
+
+    return `
+      <div class="grid-wrap deliverables-wrap">
+        <table>
+          <thead><tr><th class="name-col">Deliverables</th>${MONTH_NAMES.map(m=>`<th>${m}</th>`).join('')}</tr></thead>
+          <tbody><tr><td class="name-col"><span class="person-name">Monthly Deliverables</span></td>${cells}</tr></tbody>
+        </table>
+      </div>
+    `;
+  }
+  function renderDeliverableListForManage(){
+    const list = (state.deliverables||[]).slice().sort((a,b)=>a.month-b.month);
+    if (!list.length) return `<div class="empty-month">No deliverables set yet.</div>`;
+    return list.map(d => `<div class="task">
+        <div class="task-title">${escapeHtml(MONTH_NAMES[d.month-1])} — ${escapeHtml(d.title)}</div>
+        <button class="del" data-del-deliverable="${d.id}">✕</button>
+      </div>`).join('');
+  }
+  function renderDeliverablesForm(){
+    return `<div class="obj-panel" style="margin-bottom:14px;">
+      <div class="add-row">
+        <select id="deliverableMonthSelect">
+          ${MONTH_NAMES.map((mn,idx)=>`<option value="${idx+1}" ${idx+1===activeMonth?'selected':''}>${mn}</option>`).join('')}
+        </select>
+        <input type="text" id="newDeliverableInput" placeholder="Deliverable title…" />
+        <button id="addDeliverableBtn">Add</button>
+      </div>
+      <div class="task-list" style="margin-top:10px;">
+        ${renderDeliverableListForManage()}
+      </div>
+    </div>`;
+  }
+ 
+  async function renamePerson(id, newName){
+    const person = state.people.find(p=>p.id===id);
+    if (!person || !newName || person.name===newName) return;
+    person.name = newName;
+    if (!apiConfigured()) return;
+    try {
+      state = await apiPost('renamePerson', { id, name: newName, actingAs: me });
+      snapshotGood();
+      storageOk = true;
+      lastErrorMessage = null;
+    } catch(e){
+      storageOk = false;
+      lastErrorMessage = e.message || String(e);
+    }
+  }
+ 
+  function generateMonthlyInsights(){
+    if (CUR_MONTH < 1 || CUR_MONTH > 12){
+      return `<div class="attention-row">Today's date falls outside this financial year.</div>`;
+    }
+    const monthName = MONTH_NAMES[CUR_MONTH-1];
+    const monthTasks = state.tasks.filter(t=>t.month===CUR_MONTH);
+    const total = monthTasks.length;
+    const done = monthTasks.filter(t=>t.done).length;
+    const pending = total - done;
+    const pct = total ? Math.round(done/total*100) : 0;
+
+    const pendingByPerson = {};
+    monthTasks.forEach(t=>{ if (!t.done) pendingByPerson[t.personId] = (pendingByPerson[t.personId]||0)+1; });
+    let laggingId = null;
+    Object.keys(pendingByPerson).forEach(pid=>{
+      if (!laggingId || pendingByPerson[pid] > pendingByPerson[laggingId]) laggingId = pid;
+    });
+
+    const lines = [];
+    if (total === 0){
+      lines.push(`No tasks assigned for <strong>${monthName}</strong> yet.`);
+    } else {
+      lines.push(`<strong>${monthName}</strong>: <strong>${pct}%</strong> complete (${done} of ${total} tasks).`);
+      if (pending === 0){
+        lines.push(`Everyone is caught up for ${monthName}.`);
+      } else if (laggingId){
+        const p = state.people.find(pp=>pp.id===laggingId);
+        const nm = p ? `<span class="person-name">${escapeHtml(p.name)}</span>` : '?';
+        lines.push(`${nm} has the most pending tasks this month (${pendingByPerson[laggingId]}).`);
+      }
+    }
+    return lines.map(l => `<div class="attention-row">${l}</div>`).join('');
+  }
+
+  function generateYearlyInsights(){
+    const totals = state.tasks.length;
+    const done = state.tasks.filter(t=>t.done).length;
+    const overdue = state.tasks.filter(t=>!t.done && t.month<CUR_MONTH).length;
+    const overallPct = totals ? Math.round(done/totals*100) : 0;
+
+    const withTasks = state.people.map(p=>({ p, stats: personStats(p.id) })).filter(x=>x.stats.total>0);
+    let topPerformer = null, mostOverduePerson = null;
+    withTasks.forEach(x=>{
+      if (!topPerformer || x.stats.pct > topPerformer.stats.pct) topPerformer = x;
+      if (x.stats.overdue > 0 && (!mostOverduePerson || x.stats.overdue > mostOverduePerson.stats.overdue)) mostOverduePerson = x;
+    });
+
+    const overdueByMonth = {};
+    state.tasks.forEach(t=>{ if (!t.done && t.month<CUR_MONTH) overdueByMonth[t.month] = (overdueByMonth[t.month]||0)+1; });
+    let worstMonth = null;
+    Object.keys(overdueByMonth).forEach(m=>{
+      if (!worstMonth || overdueByMonth[m] > overdueByMonth[worstMonth]) worstMonth = m;
+    });
+
+    const lines = [];
+    if (totals === 0){
+      lines.push('No tasks assigned yet — the Manager can start adding them under My Tasks.');
+    } else {
+      lines.push(`Team is at <strong>${overallPct}%</strong> completion for the full financial year (${done} of ${totals} tasks).`);
+      if (overdue === 0){
+        lines.push('No overdue tasks right now — everyone\u2019s on track.');
+      } else {
+        lines.push(`<strong>${overdue}</strong> task${overdue===1?'':'s'} ${overdue===1?'is':'are'} overdue across the team.`);
+        if (mostOverduePerson){
+          const nm = `<span class="person-name">${escapeHtml(mostOverduePerson.p.name)}</span>`;
+          lines.push(`${nm} has the most overdue tasks (${mostOverduePerson.stats.overdue}).`);
+        }
+        if (worstMonth){
+          lines.push(`${MONTH_NAMES[worstMonth-1]} has the most overdue items (${overdueByMonth[worstMonth]}).`);
+        }
+      }
+      if (topPerformer && topPerformer.stats.pct > 0){
+        const nm = `<span class="person-name">${escapeHtml(topPerformer.p.name)}</span>`;
+        lines.push(`${nm} has the highest completion rate for the year (${topPerformer.stats.pct}%).`);
+      }
+    }
+    return lines.map(l => `<div class="attention-row">${l}</div>`).join('');
+  }
+
+  function render(){
+    // Snapshot any in-progress typing BEFORE rebuilding the DOM, so a background
+    // refresh, tab switch, or picker change can never wipe out an unsaved command.
+    const active = document.activeElement;
+    let restore = null;
+    if (active){
+      if (active.id === 'newTaskInput'){
+        restore = { kind:'newTaskInput', value: active.value, selStart: active.selectionStart, selEnd: active.selectionEnd };
+      } else if (active.id === 'newDeliverableInput'){
+        restore = { kind:'newDeliverableInput', value: active.value, selStart: active.selectionStart, selEnd: active.selectionEnd };
+      } else if (active.matches && active.matches('#editNamesModal [data-person-id]')){
+        restore = { kind:'nameInput', personId: active.dataset.personId, value: active.value, selStart: active.selectionStart, selEnd: active.selectionEnd };
+      }
+    }
+
+    document.getElementById('storageWarning').style.display = storageOk ? 'none' : 'block';
+    document.getElementById('storageWarningText').textContent = !apiConfigured()
+      ? 'Backend not set up yet — paste your Apps Script web app URL into API_URL near the top of the file.'
+      : (lastErrorMessage
+          ? ('Couldn\'t save the last change: ' + lastErrorMessage)
+          : 'Couldn\'t save the last change — check your connection and try again.');
+    document.getElementById('fy-tag').textContent = `URA TAC INTERNAL PROGRAMS · ${fyLabel} · JUL ${startYear} – JUN ${startYear+1}`;
+    document.getElementById('fy-title').innerHTML = 'FY Work Plan <span class="me-broadway">M&amp;E</span>';
+    const whoSel = document.getElementById('whoSelect');
+    whoSel.innerHTML =
+      `<option value="manager" ${me==='manager'?'selected':''}>Manager (assigns tasks)</option>` +
+      state.people.map(p => `<option value="${p.id}" ${p.id===me?'selected':''} style="font-weight:700;color:#0303F2;">${escapeHtml(p.name)}</option>`).join('');
+    document.getElementById('editNamesBtn').style.display = (me==='manager') ? 'inline-block' : 'none';
+    root.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab===activeTab));
+    const body = document.getElementById('bodyArea');
+    body.innerHTML = activeTab==='dashboard' ? renderDashboard() : activeTab==='mytasks' ? renderMyTasks() : activeTab==='objectives' ? renderObjectives() : renderReports();
+    attachBodyHandlers();
+    renderEditNamesModal();
+
+    // Restore whatever was being typed, and put the cursor back where it was.
+    if (restore){
+      let el = null;
+      if (restore.kind === 'newTaskInput'){
+        el = document.getElementById('newTaskInput');
+      } else if (restore.kind === 'newDeliverableInput'){
+        el = document.getElementById('newDeliverableInput');
+      } else if (restore.kind === 'nameInput'){
+        el = document.querySelector(`#editNamesModal [data-person-id="${restore.personId}"]`);
+      }
+      if (el){
+        el.value = restore.value;
+        el.focus();
+        try { el.setSelectionRange(restore.selStart, restore.selEnd); } catch(e){}
+      }
+    }
+  }
+ 
+  function renderEditNamesModal(){
+    const modal = document.getElementById('editNamesModal');
+    if (!editNamesOpen || me!=='manager'){
+      modal.style.display = 'none';
+      modal.innerHTML = '';
+      return;
+    }
+    modal.style.display = 'flex';
+    modal.innerHTML = `
+      <div class="modal-card">
+        <h3>Edit team member names</h3>
+        ${state.people.map((p,i)=>`<div class="modal-row"><span>${i+1}</span><input type="text" data-person-id="${p.id}" value="${escapeHtml(p.name)}" /></div>`).join('')}
+        <div class="modal-actions">
+          <button class="cancel" id="cancelEditNames">Cancel</button>
+          <button class="save" id="saveEditNames">Save</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('cancelEditNames').addEventListener('click', ()=>{
+      editNamesOpen = false;
+      renderEditNamesModal();
+    });
+    document.getElementById('saveEditNames').addEventListener('click', async ()=>{
+      const inputs = modal.querySelectorAll('[data-person-id]');
+      for (const inp of inputs){
+        const newName = inp.value.trim();
+        if (newName) await renamePerson(inp.dataset.personId, newName);
+      }
+      editNamesOpen = false;
+      render();
+    });
+  }
+ 
+  function renderDashboard(){
+    const totals = state.tasks.length;
+    const done = state.tasks.filter(t=>t.done).length;
+    const overdue = state.tasks.filter(t=>!t.done && t.month<CUR_MONTH).length;
+ 
+    const rows = state.people.map(p => {
+      const stats = personStats(p.id);
+      const cells = MONTH_NAMES.map((mn,idx) => {
+        const m = idx+1;
+        const list = tasksFor(p.id, m);
+        if (!list.length){
+          return `<td><div class="cell empty-cell" data-goto="${p.id}|${m}" title="${mn}: no tasks">–</div></td>`;
+        }
+        const key = p.id + '|' + m;
+        const totalPages = Math.ceil(list.length / CELL_PAGE_SIZE);
+        let pg = cellPage[key] || 0;
+        if (pg >= totalPages) pg = totalPages - 1;
+        if (pg < 0) pg = 0;
+        cellPage[key] = pg;
+        const pageItems = list.slice(pg*CELL_PAGE_SIZE, pg*CELL_PAGE_SIZE + CELL_PAGE_SIZE);
+        const chips = pageItems.map(t => {
+          const st = t.done ? 'done' : (m<CUR_MONTH ? 'overdue' : (m===CUR_MONTH ? 'due' : 'upcoming'));
+          return `<div class="cell-task ${st}" title="${escapeHtml(t.title)}">${escapeHtml(t.title)}</div>`;
+        }).join('');
+        const pager = totalPages > 1
+          ? `<div class="cell-pager">
+               <button class="pager-btn" data-pager-prev="${key}" ${pg===0?'disabled':''}>‹</button>
+               <span class="pager-dots">${pg+1}/${totalPages}</span>
+               <button class="pager-btn" data-pager-next="${key}" ${pg===totalPages-1?'disabled':''}>›</button>
+             </div>`
+          : '';
+        return `<td><div class="cell" data-goto="${p.id}|${m}"><div class="cell-page">${chips}</div>${pager}</div></td>`;
+      }).join('');
+      return `<tr>
+        <td class="name-col"><span class="person-name">${escapeHtml(p.name)}</span><span class="pct">${stats.pct}% complete</span></td>
+        ${cells}
+      </tr>`;
+    }).join('');
+ 
+    const overdueTasks = state.tasks
+      .filter(t=>!t.done && t.month<CUR_MONTH)
+      .sort((a,b)=>a.month-b.month)
+      .map(t => {
+        const p = state.people.find(pp=>pp.id===t.personId);
+        return `<div class="attention-row">
+          <div class="who-task"><span class="p-name">${p?`<span class="person-name">${escapeHtml(p.name)}</span>`:'?'}</span><span>${escapeHtml(t.title)}</span></div>
+          <span class="mono" style="color:var(--red)">${MONTH_NAMES[t.month-1]} · overdue</span>
+        </div>`;
+      }).join('');
+ 
+    return `
+      <div class="stat-row">
+        <div class="stat"><div class="num display">${totals}</div><div class="lbl">Total tasks</div></div>
+        <div class="stat teal"><div class="num display">${done}</div><div class="lbl">Completed</div></div>
+        <div class="stat red"><div class="num display">${overdue}</div><div class="lbl">Overdue</div></div>
+      </div>
+      ${renderDeliverablesRow()}
+      <div class="grid-wrap">
+        <table>
+          <thead><tr><th class="name-col">Team member</th>${MONTH_NAMES.map(m=>`<th>${m}</th>`).join('')}</tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <div class="attention">
+        <h3>Needs attention</h3>
+        ${overdueTasks || '<div class="attention-empty">Nothing overdue right now.</div>'}
+      </div>
+      <div class="attention" style="margin-top:16px;">
+        <h3 style="color:var(--indigo);">Insights — This Month</h3>
+        ${generateMonthlyInsights()}
+      </div>
+      <div class="attention" style="margin-top:16px;">
+        <h3 style="color:var(--indigo);">Insights — Full Financial Year</h3>
+        ${generateYearlyInsights()}
+      </div>
+    `;
+  }
+ 
+  function csvSafe(s){
+    s = String(s);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+  }
+
+  function computeMonthlyBreakdown(){
+    return MONTH_NAMES.map((mn,idx)=>{
+      const m = idx+1;
+      const list = state.tasks.filter(t=>t.month===m);
+      const done = list.filter(t=>t.done).length;
+      const overdue = list.filter(t=>!t.done && m<CUR_MONTH).length;
+      return { month: mn, total:list.length, done, overdue, pct: list.length ? Math.round(done/list.length*100) : 0 };
+    });
+  }
+
+  function personSummaries(){
+    return state.people
+      .map(p => ({ p, stats: personStats(p.id) }))
+      .sort((a,b) => a.stats.pct - b.stats.pct);
+  }
+
+  /**
+   * Renders the monthly Total/Done/Overdue/Completion% breakdown as a
+   * plain inline SVG line chart -- no external charting library, so it
+   * keeps working inside the Apps Script HtmlService sandbox with no
+   * extra script tags. Counts (Total/Done/Overdue) share the left axis;
+   * Completion % uses the right axis and a dashed line so it's visually
+   * distinct even for readers who can't tell the colors apart.
+   */
+  function renderMonthlyLineChart(data){
+    const w = 680, h = 260;
+    const padL = 40, padR = 40, padT = 16, padB = 30;
+    const chartW = w - padL - padR;
+    const chartH = h - padT - padB;
+    const n = data.length;
+    const step = n > 1 ? chartW / (n - 1) : 0;
+    const countMax = Math.max(1, ...data.map(d => d.total));
+    const countTop = Math.ceil(countMax * 1.15) || 1;
+
+    const xAt = i => padL + i * step;
+    const yCount = v => padT + chartH - (v / countTop) * chartH;
+    const yPct = v => padT + chartH - (v / 100) * chartH;
+
+    const pathFor = (values, yFn) =>
+      values.map((v, i) => `${i === 0 ? 'M' : 'L'}${xAt(i).toFixed(1)},${yFn(v).toFixed(1)}`).join(' ');
+
+    const dots = (values, yFn, color) =>
+      values.map((v, i) => `<circle cx="${xAt(i).toFixed(1)}" cy="${yFn(v).toFixed(1)}" r="3" fill="${color}" />`).join('');
+
+    const gridFracs = [0, 0.25, 0.5, 0.75, 1];
+    const gridLines = gridFracs.map(f => {
+      const y = padT + chartH - f * chartH;
+      return `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${w - padR}" y2="${y.toFixed(1)}" stroke="var(--border)" stroke-width="1" />`;
+    }).join('');
+    const countLabels = gridFracs.map(f => {
+      const y = padT + chartH - f * chartH;
+      return `<text x="${padL - 8}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="10" fill="var(--text-muted)" font-family="'IBM Plex Mono', monospace">${Math.round(f * countTop)}</text>`;
+    }).join('');
+    const pctLabels = gridFracs.map(f => {
+      const y = padT + chartH - f * chartH;
+      return `<text x="${w - padR + 8}" y="${(y + 4).toFixed(1)}" text-anchor="start" font-size="10" fill="var(--text-muted)" font-family="'IBM Plex Mono', monospace">${Math.round(f * 100)}%</text>`;
+    }).join('');
+    const monthLabels = data.map((d, i) =>
+      `<text x="${xAt(i).toFixed(1)}" y="${h - 8}" text-anchor="middle" font-size="10" fill="var(--text-muted)" font-family="'IBM Plex Mono', monospace">${d.month}</text>`
+    ).join('');
+
+    const totalVals = data.map(d => d.total);
+    const doneVals = data.map(d => d.done);
+    const overdueVals = data.map(d => d.overdue);
+    const pctVals = data.map(d => d.pct);
+
+    return `
+      <svg viewBox="0 0 ${w} ${h}" width="100%" style="display:block;max-width:100%;" role="img" aria-label="Task totals, completions, overdue counts, and completion percentage by month">
+        ${gridLines}
+        ${countLabels}
+        ${pctLabels}
+        ${monthLabels}
+        <path d="${pathFor(totalVals, yCount)}" fill="none" stroke="var(--indigo)" stroke-width="2" />
+        <path d="${pathFor(doneVals, yCount)}" fill="none" stroke="var(--green)" stroke-width="2" />
+        <path d="${pathFor(overdueVals, yCount)}" fill="none" stroke="var(--red)" stroke-width="2" />
+        <path d="${pathFor(pctVals, yPct)}" fill="none" stroke="var(--amber)" stroke-width="2" stroke-dasharray="4 3" />
+        ${dots(totalVals, yCount, 'var(--indigo)')}
+        ${dots(doneVals, yCount, 'var(--green)')}
+        ${dots(overdueVals, yCount, 'var(--red)')}
+        ${dots(pctVals, yPct, 'var(--amber)')}
+      </svg>
+      <div class="chart-legend" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:var(--text-muted);font-family:'IBM Plex Mono', monospace;">
+        <span><span style="display:inline-block;width:10px;height:10px;background:var(--indigo);border-radius:2px;margin-right:5px;"></span>Total</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:var(--green);border-radius:2px;margin-right:5px;"></span>Done</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:var(--red);border-radius:2px;margin-right:5px;"></span>Overdue</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:var(--amber);border-radius:2px;margin-right:5px;"></span>Completion %</span>
+      </div>
+    `;
+  }
+
+  function buildWeeklyReportCsv(){
+    const totals = state.tasks.length;
+    const done = state.tasks.filter(t=>t.done).length;
+    const overdue = state.tasks.filter(t=>!t.done && t.month<CUR_MONTH).length;
+    const pct = totals ? Math.round(done/totals*100) : 0;
+    const now = new Date();
+
+    const lines = [];
+    lines.push('FY Work Plan - Weekly Manager Report');
+    lines.push('Generated,' + now.toLocaleDateString(undefined,{weekday:'long',day:'2-digit',month:'short',year:'numeric'}));
+    lines.push('Financial Year,' + fyLabel);
+    lines.push('');
+    lines.push('OVERALL SUMMARY');
+    lines.push('Total tasks,' + totals);
+    lines.push('Completed,' + done);
+    lines.push('Overdue,' + overdue);
+    lines.push('Completion %,' + pct);
+    lines.push('');
+    lines.push('PER-PERSON SUMMARY');
+    lines.push('Name,Total,Done,Overdue,Completion %');
+    personSummaries().forEach(x=>{
+      lines.push([csvSafe(x.p.name), x.stats.total, x.stats.done, x.stats.overdue, x.stats.pct].join(','));
+    });
+    lines.push('');
+    lines.push('OVERDUE TASKS THIS MONTH (' + MONTH_NAMES[CUR_MONTH-1] + ')');
+    lines.push('Person,Task');
+    state.tasks.filter(t=>!t.done && t.month===CUR_MONTH).forEach(t=>{
+      const p = state.people.find(pp=>pp.id===t.personId);
+      lines.push([csvSafe(p ? p.name : '?'), csvSafe(t.title)].join(','));
+    });
+    if (snapshots && snapshots.length){
+      lines.push('');
+      lines.push('WEEKLY SNAPSHOT HISTORY');
+      lines.push('Week of,Total,Done,Overdue,Completion %');
+      snapshots.slice(-12).forEach(s=>{
+        const d = new Date(s.date);
+        const dateStr = isNaN(d) ? s.date : d.toLocaleDateString(undefined,{day:'2-digit',month:'short',year:'numeric'});
+        const spct = s.totalTasks ? Math.round((s.done/s.totalTasks)*100) : 0;
+        lines.push([csvSafe(dateStr), s.totalTasks, s.done, s.overdue, spct].join(','));
+      });
+    }
+    return lines.join('\n');
+  }
+
+  function downloadWeeklyReport(){
+    const csv = buildWeeklyReportCsv();
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const now = new Date();
+    const stamp = now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0');
+    a.href = url;
+    a.download = `weekly-report-${fyLabel.replace(/\s+/g,'')}-${stamp}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function renderReports(){
+    const totals = state.tasks.length;
+    const done = state.tasks.filter(t=>t.done).length;
+    const overdue = state.tasks.filter(t=>!t.done && t.month<CUR_MONTH).length;
+    const pct = totals ? Math.round(done/totals*100) : 0;
+    const isManager = me === 'manager';
+
+    const personRows = personSummaries().map(x =>
+      `<tr><td><span class="person-name">${escapeHtml(x.p.name)}</span></td><td class="num">${x.stats.total}</td><td class="num">${x.stats.done}</td><td class="num">${x.stats.overdue}</td><td class="num">${x.stats.pct}%</td></tr>`
+    ).join('');
+
+    const snapshotRows = (snapshots && snapshots.length) ? snapshots.slice(-8).reverse().map(s=>{
+      const d = new Date(s.date);
+      const dateStr = isNaN(d) ? s.date : d.toLocaleDateString(undefined,{day:'2-digit',month:'short',year:'numeric'});
+      const spct = s.totalTasks ? Math.round((s.done/s.totalTasks)*100) : 0;
+      return `<tr><td>${dateStr}</td><td class="num">${s.totalTasks}</td><td class="num">${s.done}</td><td class="num">${s.overdue}</td><td class="num">${spct}%</td></tr>`;
+    }).join('') : '';
+
+    return `
+      <div class="stat-row">
+        <div class="stat"><div class="num display">${totals}</div><div class="lbl">Total tasks</div></div>
+        <div class="stat teal"><div class="num display">${done}</div><div class="lbl">Completed</div></div>
+        <div class="stat red"><div class="num display">${overdue}</div><div class="lbl">Overdue</div></div>
+        <div class="stat amber"><div class="num display">${pct}%</div><div class="lbl">Completion</div></div>
+      </div>
+
+      ${isManager ? `<div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+        <button class="download-btn" id="downloadReportBtn">⬇ Download weekly report</button>
+      </div>` : ''}
+
+      <div class="attention">
+        <h3>Task analysis — by month</h3>
+        <div class="reports-table-wrap">
+          ${renderMonthlyLineChart(computeMonthlyBreakdown())}
+        </div>
+      </div>
+
+      <div class="attention" style="margin-top:16px;">
+        <h3>Person analysis</h3>
+        <div class="reports-table-wrap">
+          <table>
+            <thead><tr><th>Team member</th><th class="num">Total</th><th class="num">Done</th><th class="num">Overdue</th><th class="num">Completion</th></tr></thead>
+            <tbody>${personRows || '<tr><td colspan="5" class="empty-month">No tasks yet.</td></tr>'}</tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="attention" style="margin-top:16px;">
+        <h3>Weekly snapshot history</h3>
+        ${snapshotRows ? `<div class="reports-table-wrap">
+          <table>
+            <thead><tr><th>Week of</th><th class="num">Total</th><th class="num">Done</th><th class="num">Overdue</th><th class="num">Completion</th></tr></thead>
+            <tbody>${snapshotRows}</tbody>
+          </table>
+        </div>` : `<div class="attention-empty">No snapshots recorded yet — these populate automatically once the backend's weekly trigger runs.</div>`}
+      </div>
+    `;
+  }
+
+  function renderMyTasks(){
+    const isManager = me === 'manager';
+    if (!me) return `<div class="empty-month">Pick who you are from the dropdown above to see tasks.</div>`;
+ 
+    const targetId = isManager
+      ? (viewingPersonId || (state.people[0] && state.people[0].id))
+      : (viewingPersonId || me);
+    if (!targetId) return `<div class="empty-month">No team members yet.</div>`;
+    const person = state.people.find(p=>p.id===targetId);
+    // canEdit gates deletion -- manager-only, on purpose (people can add
+    // their own tasks but not remove them once logged).
+    const canEdit = isManager;
+    // canAddTask gates the "Add a task" row -- the manager can add for
+    // anyone they're assigning to, and each person can add tasks to
+    // their own list, but not to a teammate's.
+    const canAddTask = isManager || targetId===me;
+    const canToggle = !isManager && targetId===me;
+ 
+    const managerPicker = isManager ? `
+      <div class="readonly-banner" style="border-color:var(--indigo);">
+        <span>Assigning tasks for</span>
+        <select id="managerPersonSelect" style="background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 8px;">
+          ${state.people.map(p=>`<option value="${p.id}" ${p.id===targetId?'selected':''} style="font-weight:700;color:#0303F2;">${escapeHtml(p.name)}</option>`).join('')}
+        </select>
+      </div>` : '';
+
+    const deliverablesToggle = isManager ? `
+      <div class="obj-subnav" style="margin-bottom:14px;">
+        <button class="obj-panel-btn ${deliverablesFormOpen?'active':''}" id="toggleDeliverablesBtn">🎯 Deliverables</button>
+      </div>
+      ${deliverablesFormOpen ? renderDeliverablesForm() : ''}
+    ` : '';
+ 
+    const banner = (!isManager && targetId!==me) ? `<div class="readonly-banner">
+      <span>Viewing ${person?`<span class="person-name">${escapeHtml(person.name)}</span>`:''}'s tasks — read only.</span>
+      <button data-backtomine="1">Back to my tasks</button>
+    </div>` : '';
+ 
+    const monthTabs = MONTH_NAMES.map((mn,idx)=>{
+      const m = idx+1;
+      return `<div class="month-tab ${m===activeMonth?'active':''} ${m===CUR_MONTH?'now':''}" data-month="${m}">${mn}</div>`;
+    }).join('');
+ 
+    const list = tasksFor(targetId, activeMonth);
+    const tasksHtml = list.length ? list.map(t=>{
+      const st = t.done ? 'done' : (activeMonth<CUR_MONTH ? 'overdue' : (activeMonth===CUR_MONTH ? 'due' : ''));
+      const stampTxt = t.done ? 'DONE' : (activeMonth<CUR_MONTH ? 'LATE' : (activeMonth===CUR_MONTH ? 'DUE' : ''));
+      return `<div class="task ${t.done?'done':''}">
+        <div class="check" data-toggle="${t.id}" style="${canToggle?'':'pointer-events:none;opacity:.5;'}">${t.done?'✓':''}</div>
+        <div class="task-title">${escapeHtml(t.title)}</div>
+        ${stampTxt?`<div class="stamp ${st}">${stampTxt}</div>`:''}
+        ${canEdit?`<button class="del" data-del="${t.id}">✕</button>`:''}
+      </div>`;
+    }).join('') : `<div class="empty-month">No tasks logged for ${MONTH_NAMES[activeMonth-1]} yet.</div>`;
+ 
+    const addRow = canAddTask ? `
+      <div class="add-row">
+        <input type="text" id="newTaskInput" placeholder="Add a task for ${person?escapeHtml(person.name):''} — ${MONTH_NAMES[activeMonth-1]}…" />
+        <select id="newTaskStrategic">
+          <option value="">Strategic objective…</option>
+          ${strategicObjectives().map(o=>`<option value="${o.id}">${escapeHtml(o.name)}</option>`).join('')}
+        </select>
+        <select id="newTaskGoal"><option value="">Planned goal…</option></select>
+        <select id="newTaskIntervention"><option value="">Intervention…</option></select>
+        <button id="addTaskBtn">Add</button>
+      </div>` : '';
+ 
+    return `
+      ${managerPicker}
+      ${deliverablesToggle}
+      ${banner}
+      <div class="month-tabs">${monthTabs}</div>
+      <div class="task-list">${tasksHtml}</div>
+      ${addRow}
+    `;
+  }
+ 
+  function attachBodyHandlers(){
+    root.querySelectorAll('[data-goto]').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const [pid, m] = el.dataset.goto.split('|');
+        viewingPersonId = pid;
+        activeMonth = parseInt(m,10);
+        activeTab = 'mytasks';
+        render();
+      });
+    });
+    root.querySelectorAll('[data-month]').forEach(el=>{
+      el.addEventListener('click', ()=>{ activeMonth = parseInt(el.dataset.month,10); render(); });
+    });
+    root.querySelectorAll('[data-pager-prev]').forEach(el=>{
+      el.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const key = el.dataset.pagerPrev;
+        cellPage[key] = Math.max(0, (cellPage[key]||0) - 1);
+        render();
+      });
+    });
+    root.querySelectorAll('[data-pager-next]').forEach(el=>{
+      el.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const key = el.dataset.pagerNext;
+        cellPage[key] = (cellPage[key]||0) + 1;
+        render();
+      });
+    });
+    root.querySelectorAll('[data-deliv-pager-prev]').forEach(el=>{
+      el.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const key = el.dataset.delivPagerPrev;
+        deliverablePage[key] = Math.max(0, (deliverablePage[key]||0) - 1);
+        render();
+      });
+    });
+    root.querySelectorAll('[data-deliv-pager-next]').forEach(el=>{
+      el.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const key = el.dataset.delivPagerNext;
+        deliverablePage[key] = (deliverablePage[key]||0) + 1;
+        render();
+      });
+    });
+    root.querySelectorAll('[data-toggle]').forEach(el=>{
+      el.addEventListener('click', async ()=>{
+        const id = el.dataset.toggle;
+        const t = state.tasks.find(x=>x.id===id);
+        if (!t || me==='manager' || t.personId!==me) return;
+        t.done = !t.done;
+        t.doneAt = t.done ? Date.now() : null;
+        if (!apiConfigured()){ render(); return; }
+        render();
+        try {
+          state = await apiPost('toggleDone', { id, actingAs: me });
+          snapshotGood();
+          storageOk = true;
+          lastErrorMessage = null;
+        } catch(e){
+          state = lastGoodState ? JSON.parse(JSON.stringify(lastGoodState)) : state;
+          storageOk = false;
+          lastErrorMessage = e.message || String(e);
+        }
+        render();
+      });
+    });
+    root.querySelectorAll('[data-del]').forEach(el=>{
+      el.addEventListener('click', async ()=>{
+        const id = el.dataset.del;
+        const t = state.tasks.find(x=>x.id===id);
+        if (!t || me!=='manager') return;
+        state.tasks = state.tasks.filter(x=>x.id!==id);
+        if (!apiConfigured()){ render(); return; }
+        render();
+        try {
+          state = await apiPost('deleteTask', { id, actingAs: me });
+          snapshotGood();
+          storageOk = true;
+          lastErrorMessage = null;
+        } catch(e){
+          state = lastGoodState ? JSON.parse(JSON.stringify(lastGoodState)) : state;
+          storageOk = false;
+          lastErrorMessage = e.message || String(e);
+        }
+        render();
+      });
+    });
+    root.querySelectorAll('[data-del-deliverable]').forEach(el=>{
+      el.addEventListener('click', ()=> deleteDeliverable(el.dataset.delDeliverable));
+    });
+    const backBtn = root.querySelector('[data-backtomine]');
+    if (backBtn) backBtn.addEventListener('click', ()=>{ viewingPersonId=null; render(); });
+ 
+    const managerSel = document.getElementById('managerPersonSelect');
+    if (managerSel){
+      managerSel.addEventListener('change', ()=>{
+        viewingPersonId = managerSel.value;
+        render();
+      });
+    }
+
+    const toggleDelivBtn = document.getElementById('toggleDeliverablesBtn');
+    if (toggleDelivBtn){
+      toggleDelivBtn.addEventListener('click', ()=>{
+        deliverablesFormOpen = !deliverablesFormOpen;
+        render();
+      });
+    }
+
+    const addDelivBtn = document.getElementById('addDeliverableBtn');
+    if (addDelivBtn){
+      addDelivBtn.addEventListener('click', addDeliverable);
+      const delivInput = document.getElementById('newDeliverableInput');
+      if (delivInput){
+        delivInput.addEventListener('keydown', e=>{
+          if (e.key==='Enter') addDeliverable();
+        });
+      }
+    }
+ 
+    const addBtn = document.getElementById('addTaskBtn');
+    if (addBtn){
+      addBtn.addEventListener('click', addTask);
+      document.getElementById('newTaskInput').addEventListener('keydown', e=>{
+        if (e.key==='Enter') addTask();
+      });
+    }
+
+    // Cascading Strategic Objective -> Planned Goal -> Intervention
+    // pickers on the task-add row. These just rewrite each other's
+    // <option> lists in place -- no full render() needed, so the
+    // person doesn't lose anything they've already typed.
+    const stratSel = document.getElementById('newTaskStrategic');
+    const goalSel = document.getElementById('newTaskGoal');
+    const intSel = document.getElementById('newTaskIntervention');
+    if (stratSel && goalSel && intSel){
+      stratSel.addEventListener('change', ()=>{
+        const goals = plannedGoalsOf(stratSel.value);
+        goalSel.innerHTML = '<option value="">Planned goal…</option>' +
+          goals.map(g=>`<option value="${g.id}">${escapeHtml(g.name)}</option>`).join('');
+        intSel.innerHTML = '<option value="">Intervention…</option>';
+      });
+      goalSel.addEventListener('change', ()=>{
+        const interventions = interventionsOf(goalSel.value);
+        intSel.innerHTML = '<option value="">Intervention…</option>' +
+          interventions.map(iv=>`<option value="${iv.id}">${escapeHtml(iv.name)}</option>`).join('');
+      });
+    }
+
+    root.querySelectorAll('[data-panel]').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const level = el.dataset.panel;
+        objectivesManagePanel = (objectivesManagePanel===level) ? null : level;
+        render();
+      });
+    });
+
+    const addLevelBtn = document.getElementById('addLevelBtn');
+    if (addLevelBtn){
+      addLevelBtn.addEventListener('click', ()=> addObjectiveLevel(addLevelBtn.dataset.level));
+      const levelInput = document.getElementById('newLevelName');
+      if (levelInput){
+        levelInput.addEventListener('keydown', e=>{
+          if (e.key==='Enter') addObjectiveLevel(addLevelBtn.dataset.level);
+        });
+      }
+    }
+
+    const downloadBtn = document.getElementById('downloadReportBtn');
+    if (downloadBtn) downloadBtn.addEventListener('click', downloadWeeklyReport);
+  }
+ 
+  async function addTask(){
+    const input = document.getElementById('newTaskInput');
+    const title = input.value.trim();
+    if (!title || !me) return;
+    const isManager = me === 'manager';
+    // Mirrors renderMyTasks()'s target resolution: the manager can add to
+    // whoever they're assigning to, everyone else can only add to
+    // themselves -- even if viewingPersonId is somehow stale, this keeps
+    // a person from adding a task onto a teammate's list.
+    const targetId = isManager
+      ? (viewingPersonId || (state.people[0] && state.people[0].id))
+      : me;
+    if (!targetId) return;
+    if (!isManager && targetId !== me) return;
+    // A task ties to the Intervention only -- the Strategic Objective
+    // and Planned Goal above it are implied by the chain.
+    const intSelect = document.getElementById('newTaskIntervention');
+    const objectiveId = intSelect ? (intSelect.value || null) : null;
+    const tempId = 'temp'+Date.now()+Math.random().toString(16).slice(2);
+    state.tasks.push({ id: tempId, personId: targetId, month: activeMonth, title, done:false, doneAt:null, objectiveId });
+    input.value = '';
+    if (!apiConfigured()){ render(); return; }
+    render();
+    try {
+      state = await apiPost('addTask', { personId: targetId, month: activeMonth, title, objectiveId: objectiveId||'', actingAs: me });
+      snapshotGood();
+      storageOk = true;
+      lastErrorMessage = null;
+    } catch(e){
+      if (lastGoodState){
+        state = JSON.parse(JSON.stringify(lastGoodState));
+      } else {
+        state.tasks = state.tasks.filter(t=>t.id!==tempId);
+      }
+      storageOk = false;
+      lastErrorMessage = e.message || String(e);
+    }
+    render();
+  }
+
+  async function addDeliverable(){
+    const input = document.getElementById('newDeliverableInput');
+    const monthSel = document.getElementById('deliverableMonthSelect');
+    if (!input || !monthSel || me!=='manager') return;
+    const title = input.value.trim();
+    const month = parseInt(monthSel.value, 10);
+    if (!title || !month) return;
+    const tempId = 'tempdv'+Date.now()+Math.random().toString(16).slice(2);
+    state.deliverables = state.deliverables || [];
+    state.deliverables.push({ id: tempId, month, title, createdAt: Date.now() });
+    input.value = '';
+    if (!apiConfigured()){ render(); return; }
+    render();
+    try {
+      state = await apiPost('addDeliverable', { month, title, actingAs: me });
+      state.deliverables = state.deliverables || [];
+      snapshotGood();
+      storageOk = true;
+      lastErrorMessage = null;
+    } catch(e){
+      if (lastGoodState){
+        state = JSON.parse(JSON.stringify(lastGoodState));
+      } else {
+        state.deliverables = (state.deliverables||[]).filter(d=>d.id!==tempId);
+      }
+      storageOk = false;
+      lastErrorMessage = e.message || String(e);
+    }
+    render();
+  }
+
+  async function deleteDeliverable(id){
+    if (me!=='manager') return;
+    const d = (state.deliverables||[]).find(x=>x.id===id);
+    if (!d) return;
+    state.deliverables = state.deliverables.filter(x=>x.id!==id);
+    if (!apiConfigured()){ render(); return; }
+    render();
+    try {
+      state = await apiPost('deleteDeliverable', { id, actingAs: me });
+      state.deliverables = state.deliverables || [];
+      snapshotGood();
+      storageOk = true;
+      lastErrorMessage = null;
+    } catch(e){
+      state = lastGoodState ? JSON.parse(JSON.stringify(lastGoodState)) : state;
+      storageOk = false;
+      lastErrorMessage = e.message || String(e);
+    }
+    render();
+  }
+ 
+  async function addObjectiveLevel(level){
+    const nameInput = document.getElementById('newLevelName');
+    const parentSel = document.getElementById('newLevelParent');
+    if (!nameInput) return;
+    const name = nameInput.value.trim();
+    if (!name || me!=='manager') return;
+    const parentId = parentSel ? (parentSel.value || '') : '';
+    if (level !== 'strategic' && !parentId) return; // goal/intervention need a parent picked
+    if (!apiConfigured()){
+      // Nothing can be saved without a configured backend -- leave
+      // the typed text in place instead of silently discarding it.
+      storageOk = false;
+      render();
+      return;
+    }
+    // Optimistic update: show the new objective immediately, the same way
+    // addTask() does, rather than waiting on the network round-trip.
+    const tempId = 'temp'+Date.now()+Math.random().toString(16).slice(2);
+    state.objectives = state.objectives || [];
+    state.objectives.push({ id: tempId, name, parentId });
+    nameInput.value = '';
+    render();
+    try {
+      state = await apiPost('addObjective', { name, parentId, actingAs: me });
+      snapshotGood();
+      storageOk = true;
+      lastErrorMessage = null;
+      // render() rebuilds the panel with the server's real entry now in
+      // state, reconciling the temp placeholder with the permanent one.
+      render();
+    } catch(e){
+      if (lastGoodState){
+        state = JSON.parse(JSON.stringify(lastGoodState));
+      } else {
+        state.objectives = (state.objectives||[]).filter(o=>o.id!==tempId);
+      }
+      storageOk = false;
+      lastErrorMessage = e.message || String(e);
+      render();
+      // The save failed, so restore what they typed instead of
+      // leaving the field blank with no indication anything went wrong.
+      const freshInput = document.getElementById('newLevelName');
+      if (freshInput){ freshInput.value = name; freshInput.focus(); }
+    }
+  }
+ 
+  document.getElementById('whoSelect').addEventListener('change', async (e)=>{
+    await setMe(e.target.value);
+    viewingPersonId = null;
+    render();
+  });
+  root.querySelectorAll('.tab').forEach(t=>{
+    t.addEventListener('click', async ()=>{
+      activeTab = t.dataset.tab;
+      if (activeTab==='mytasks') viewingPersonId=null;
+      if (activeTab==='reports') await loadSnapshots();
+      render();
+    });
+  });
+  document.getElementById('refreshBtn').addEventListener('click', async (e)=>{
+    const btn = e.currentTarget;
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = '↻ syncing…';
+    await loadState(false);
+    if (activeTab==='reports') await loadSnapshots();
+    render();
+    // re-fetch the (possibly re-rendered) button since render() rebuilds nothing outside topbar, but be safe
+    const btnAfter = document.getElementById('refreshBtn');
+    if (btnAfter){
+      btnAfter.textContent = originalText;
+      btnAfter.disabled = false;
+    }
+  });
+  document.getElementById('editNamesBtn').addEventListener('click', ()=>{
+    editNamesOpen = true;
+    renderEditNamesModal();
+  });
+ 
+  (async function init(){
+    refreshClock();
+    await loadState(true);
+    await loadMe();
+    await loadSnapshots();
+    render();
+    setInterval(async ()=>{
+      await loadState(false);
+      if (activeTab==='reports') await loadSnapshots();
+      const active = document.activeElement;
+      const modal = document.getElementById('editNamesModal');
+      const withinWidget = active && (root.contains(active) || (modal && modal.contains(active)));
+      const isTyping = withinWidget &&
+        (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT');
+      // Don't redraw the screen out from under someone mid-command (typing a task, editing a name).
+      // State is still refreshed in the background; the screen catches up on their next action.
+      if (!isTyping) render();
+    }, POLL_MS);
+    setInterval(()=>{
+      const monthOrYearChanged = refreshClock();
+      if (monthOrYearChanged) render();
+    }, 60000);
+  })();
+})();
+</script>
+</body>
+</html>
